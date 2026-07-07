@@ -1,0 +1,3 @@
+.star-rating { display: inline-flex; align-items: center; gap: 6px; }
+.star-rating__stars { color: var(--gsu-blue); letter-spacing: 1px; }
+.star-rating__value { font-weight: 700; color: var(--gsu-blue); }

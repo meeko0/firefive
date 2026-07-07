@@ -1,0 +1,7 @@
+.type-toggle { display: inline-flex; background: #F1F4F9; border-radius: 999px; padding: 3px; gap: 2px; }
+.type-toggle__btn {
+  border: none; background: transparent; color: var(--muted);
+  font-size: 13px; font-weight: 600; padding: 8px 18px; border-radius: 999px;
+}
+.type-toggle__btn.is-active { background: var(--gsu-blue); color: #fff; }
+.type-toggle__btn.is-active.is-dorm-opt { background: var(--gsu-red); }

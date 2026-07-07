@@ -1,0 +1,24 @@
+/* GSU design tokens — every color lives here, nobody hardcodes hex values */
+:root {
+  --gsu-blue: #0039A6;
+  --gsu-blue-dark: #002B7F;
+  --gsu-blue-soft: #E6ECF7;
+  --gsu-red: #C60C30;
+  --gsu-red-soft: #FBE6EA;
+  --ink: #1F2430;
+  --muted: #6B7280;
+  --line: #D9DEE7;
+  --surface: #ffffff;
+  --bg: #EDF0F5;
+  --placeholder: #E3E7EE;
+  --radius: 12px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: Inter, system-ui, -apple-system, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }

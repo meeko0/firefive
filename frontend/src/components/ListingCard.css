@@ -1,0 +1,22 @@
+.listing-card {
+  display: block; background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  overflow: hidden; transition: box-shadow .15s ease;
+}
+.listing-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+.listing-card__image { position: relative; height: 120px; background: var(--placeholder); }
+.listing-card__image .badge { position: absolute; top: 12px; left: 12px; }
+.listing-card__heart {
+  position: absolute; top: 8px; right: 12px;
+  width: 26px; height: 26px; display: flex;
+  align-items: center; justify-content: center;
+  background: #fff; border-radius: 50%; color: var(--gsu-red); font-size: 15px;
+}
+.listing-card__body { padding: 14px 16px 16px; }
+.listing-card__name { margin: 0; font-size: 16px; font-weight: 700; }
+.listing-card__address { margin: 4px 0 0; font-size: 12px; color: var(--muted); }
+.listing-card__meta { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 13px; }
+.listing-card__reviews { color: var(--muted); }
+.listing-card__price { margin: 8px 0 0; font-size: 14px; font-weight: 700; color: var(--gsu-blue); }
+.listing-card__tags { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.tag { font-size: 10px; background: #F1F4F9; color: var(--ink); padding: 4px 10px; border-radius: 999px; }
