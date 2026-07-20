@@ -6,3 +6,14 @@ export default function Reviews() {
     </main>
   );
 }
+const reviews = [
+  {
+    id: 1,
+    name: "John Doe",
+    verified: true,
+    rating: 4,
+    residentFrom: "August 2023 - May 2024",
+    title: "Review Title/Subject",
+    body: "xxxxxxxxxxxxxxx",
+  }]
+
