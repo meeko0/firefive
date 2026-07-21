@@ -29,7 +29,10 @@ def create_app():
     db.init_app(app)
 
     from app.routes.listings import listings_bp
+    from app.routes.auth import auth_bp
+
     app.register_blueprint(listings_bp)
+    app.register_blueprint(auth_bp)
 
     with app.app_context():
         # Import every model before creating tables so SQLAlchemy registers them.

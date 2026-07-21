@@ -6,6 +6,7 @@ import Reviews from "./pages/Reviews";
 import WriteReview from "./pages/WriteReview";
 import About from "./pages/About";
 import Budget from "./pages/Budget";
+import AuthPage from "./pages/AuthPage";
 
 export default function App() {
   return (
@@ -18,6 +19,8 @@ export default function App() {
         <Route path="/write-review" element={<WriteReview />} />
         <Route path="/about" element={<About />} />
         <Route path="/budget" element={<Budget />} />
+        <Route path="/login" element={<AuthPage mode="login" />} />
+        <Route path="/signup" element={<AuthPage mode="signup" />} />
       </Routes>
     </>
   );
