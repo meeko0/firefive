@@ -4,3 +4,4 @@ async function request(path, options = {}) { const response = await fetch(`${API
 export const fetchDashboard = () => request("/dashboard");
 export const moderateReview = (id, status, reason) => request(`/reviews/${id}`, { method: "PATCH", body: JSON.stringify({ status, reason }) });
 export const addProperty = (values) => request("/properties", { method: "POST", body: JSON.stringify(values) });
+export const updateProperty = (id, values) => request(`/properties/${id}`, { method: "PATCH", body: JSON.stringify(values) });

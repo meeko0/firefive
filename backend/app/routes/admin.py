@@ -18,6 +18,7 @@ def dashboard():
         "counts": {"users": User.query.count(), "reviews": Review.query.count(), "properties": Listing.query.count()},
         "pendingReviews": [review.to_dict() for review in Review.query.filter_by(status="pending").order_by(Review.created_at).all()],
         "users": [{"id": user.id, "name": user.name, "email": user.email, "isVerified": user.is_verified, "role": "admin" if user.is_admin else "moderator" if user.is_moderator else "student"} for user in User.query.order_by(User.created_at.desc()).all()],
+        "properties": [listing.to_dict() for listing in Listing.query.order_by(Listing.name).all()],
     })
 
 
@@ -57,6 +58,7 @@ def add_property():
         rent_min=data.get("rentMin"),
         rent_max=data.get("rentMax"),
         price_per_semester=data.get("pricePerSemester"),
+        distance_mi=data.get("distanceMi"),
         bedrooms=data.get("bedrooms"),
         amenities=",".join(data.get("amenities", [])),
         photo_url=str(data.get("photoUrl", "")) or "/property-placeholder.svg",
@@ -66,3 +68,34 @@ def add_property():
     db.session.add(listing)
     db.session.commit()
     return jsonify({"listing": listing.to_dict()}), 201
+
+
+@admin_bp.route("/properties/<int:listing_id>", methods=["PATCH"])
+@require_auth(staff=True)
+def update_property(listing_id):
+    listing = db.get_or_404(Listing, listing_id)
+    data = request.get_json(silent=True) or {}
+    housing_type = str(data.get("type", listing.housing_type)).strip()
+    if housing_type not in ("apartment", "dorm"):
+        return jsonify({"error": "Choose apartment or dorm."}), 400
+    bedrooms = data.get("bedrooms", listing.bedrooms)
+    try:
+        bedrooms = int(bedrooms) if bedrooms not in (None, "") else None
+    except (TypeError, ValueError):
+        return jsonify({"error": "Bedrooms must be a whole number."}), 400
+    if bedrooms is not None and bedrooms < 1:
+        return jsonify({"error": "Bedrooms must be at least 1."}), 400
+
+    listing.name = str(data.get("name", listing.name)).strip()
+    listing.address = str(data.get("address", listing.address)).strip()
+    listing.description = str(data.get("description", listing.description or "")).strip()
+    listing.housing_type = housing_type
+    listing.bedrooms = bedrooms
+    listing.rent_min = data.get("rentMin", listing.rent_min) or None
+    listing.rent_max = data.get("rentMax", listing.rent_max) or None
+    listing.price_per_semester = data.get("pricePerSemester", listing.price_per_semester) or None
+    listing.distance_mi = data.get("distanceMi", listing.distance_mi) or None
+    listing.amenities = ",".join(data.get("amenities", listing.to_dict()["amenities"]))
+    listing.photo_url = str(data.get("photoUrl", listing.photo_url or "/property-placeholder.svg"))
+    db.session.commit()
+    return jsonify({"listing": listing.to_dict()})

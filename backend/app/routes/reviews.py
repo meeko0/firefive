@@ -15,6 +15,21 @@ def parse_date(value):
     return date.fromisoformat(value) if value else None
 
 
+@reviews_bp.route("", methods=["GET"])
+def list_reviews():
+    sort = request.args.get("sort", "relevant")
+    query = Review.query.filter_by(status="approved")
+    if sort == "newest":
+        query = query.order_by(Review.created_at.desc())
+    elif sort == "highest":
+        query = query.order_by(Review.rating.desc(), Review.created_at.desc())
+    elif sort == "lowest":
+        query = query.order_by(Review.rating.asc(), Review.created_at.desc())
+    else:
+        query = query.order_by(Review.rating.desc(), Review.safety_rating.desc(), Review.created_at.desc())
+    return jsonify([review.to_dict() for review in query.all()])
+
+
 @reviews_bp.route("", methods=["POST"])
 @require_auth(verified=True)
 def create_review():

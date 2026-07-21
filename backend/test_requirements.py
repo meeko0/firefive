@@ -54,6 +54,11 @@ class RequirementsLifecycleTest(unittest.TestCase):
         self.assertEqual(self.client.patch(f"/api/admin/reviews/{review_id}", headers=moderator_headers, json={"status": "approved"}).status_code, 200)
         property_response = self.client.post("/api/admin/properties", headers=moderator_headers, json={"name": "Moderator Added Housing", "address": "1 GSU Plaza", "type": "apartment", "bedrooms": 2, "amenities": ["Parking"]})
         self.assertEqual(property_response.status_code, 201)
+        property_id = property_response.get_json()["listing"]["id"]
+        update_response = self.client.patch(f"/api/admin/properties/{property_id}", headers=moderator_headers, json={"bedrooms": 3, "rentMin": 975, "amenities": ["Parking", "Laundry"]})
+        self.assertEqual(update_response.status_code, 200)
+        self.assertEqual(update_response.get_json()["listing"]["bedrooms"], 3)
+        self.assertEqual(len(self.client.get("/api/reviews?sort=highest").get_json()), 1)
         detail = self.client.get("/api/listings/1?sort=highest").get_json()
         self.assertEqual(len(detail["reviews"]), 1)
         self.assertEqual(detail["averageSafetyRating"], 4.0)

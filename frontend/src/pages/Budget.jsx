@@ -1,8 +1,22 @@
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { fetchListings } from "../api/listings";
+import "./Budget.css";
+
+const COMMUTE_COST = { walk: 0, transit: 30, drive: 180 };
+const monthlyHousingCost = (listing) => listing.type === "dorm" ? Math.round(listing.pricePerSemester / 4) : listing.rentMin;
+
 export default function Budget() {
-  return (
-    <main style={{ maxWidth: 900, margin: "0 auto", padding: 24 }}>
-      <h1>Match My Budget</h1>
-      <p style={{ color: "var(--muted)" }}>Budget page — build me out.</p>
-    </main>
-  );
+  const [listings, setListings] = useState([]);
+  const [values, setValues] = useState({ budget: "1500", utilities: "120", groceries: "300", commute: "transit", type: "all", bedrooms: "" });
+  useEffect(() => { const controller = new AbortController(); fetchListings(controller.signal).then(setListings).catch(() => {}); return () => controller.abort(); }, []);
+  const expenses = Number(values.utilities || 0) + Number(values.groceries || 0) + COMMUTE_COST[values.commute];
+  const available = Math.max(0, Number(values.budget || 0) - expenses);
+  const matches = useMemo(() => listings.map((listing) => ({ ...listing, monthlyCost: monthlyHousingCost(listing) })).filter((listing) => (values.type === "all" || listing.type === values.type) && (!values.bedrooms || listing.bedrooms >= Number(values.bedrooms)) && listing.monthlyCost <= available).sort((a,b) => b.monthlyCost - a.monthlyCost), [listings, values.type, values.bedrooms, available]);
+  const update = (event) => setValues({ ...values, [event.target.name]: event.target.value });
+  return <main className="budget-page"><header><div><p>Monthly planning tool</p><h1>Find housing that fits the rest of your life.</h1><span>Start with your total monthly budget, account for everyday costs, and compare housing against what remains.</span></div><div className="budget-total"><span>Available for housing</span><strong>${available.toLocaleString()}</strong><small>per month</small></div></header>
+    <div className="budget-layout"><section className="budget-form"><h2>Your monthly plan</h2><label>Total monthly budget<input name="budget" type="number" min="0" value={values.budget} onChange={update} /></label><div className="budget-fields"><label>Utilities estimate<input name="utilities" type="number" min="0" value={values.utilities} onChange={update} /></label><label>Groceries estimate<input name="groceries" type="number" min="0" value={values.groceries} onChange={update} /></label></div><label>Commute plan<select name="commute" value={values.commute} onChange={update}><option value="walk">Walk or bike ($0)</option><option value="transit">Public transit ($30)</option><option value="drive">Drive and park ($180)</option></select></label><div className="budget-fields"><label>Housing type<select name="type" value={values.type} onChange={update}><option value="all">All housing</option><option value="apartment">Apartments</option><option value="dorm">Dorms</option></select></label><label>Minimum bedrooms<select name="bedrooms" value={values.bedrooms} onChange={update}><option value="">Any</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option></select></label></div><div className="budget-breakdown"><span>Utilities and groceries<strong>${(Number(values.utilities || 0) + Number(values.groceries || 0)).toLocaleString()}</strong></span><span>Commute estimate<strong>${COMMUTE_COST[values.commute]}</strong></span><span>Housing allowance<strong>${available.toLocaleString()}</strong></span></div></section>
+      <section className="budget-results"><div><h2>{matches.length} budget match{matches.length === 1 ? "" : "es"}</h2><p>Dorm prices are converted to a four-month semester estimate. Apartment matches use the lowest advertised monthly rent.</p></div>{matches.map((listing) => <article key={listing.id}><div><span>{listing.type}</span><h3>{listing.name}</h3><p>{listing.address} · {listing.bedrooms ? `${listing.bedrooms} bedroom${listing.bedrooms === 1 ? "" : "s"}` : "Bedrooms not listed"}</p></div><div className="budget-result__cost"><strong>${listing.monthlyCost.toLocaleString()}</strong><span>estimated monthly</span><small>${(available - listing.monthlyCost).toLocaleString()} left</small><Link to={`/property/${listing.id}`}>View property</Link></div></article>)}{matches.length === 0 && <div className="budget-empty"><h3>No matches at this allowance</h3><p>Try adjusting non-housing estimates, housing type, or minimum bedrooms.</p></div>}</section>
+    </div><p className="budget-disclaimer">Estimates are for comparison only. Confirm lease terms, fees, utilities, meal plans, and financial-aid rules directly with each housing provider.</p>
+  </main>;
 }
