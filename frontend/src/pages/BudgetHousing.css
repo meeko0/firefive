@@ -1,0 +1,9 @@
+.move-in-ready,
+.move-in-short {
+  display: block;
+  margin-top: 9px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.move-in-ready { color: var(--gsu-blue); }
+.move-in-short { color: var(--gsu-red); }
