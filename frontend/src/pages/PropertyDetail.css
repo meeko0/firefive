@@ -10,6 +10,7 @@
 .property-info { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin: 24px 0; }
 .property-info > * { padding: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
 .property-info aside { display: grid; gap: 10px; align-content: start; color: var(--muted); }
+.property-info aside hr { width: 100%; margin: 5px 0; border: 0; border-top: 1px solid var(--line); }
 .property-reviews { padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
 .property-reviews__head { display: flex; justify-content: space-between; gap: 20px; }
 .property-reviews__head h2 { margin-bottom: 4px; }.property-reviews__head p { margin-top: 0; color: var(--muted); }

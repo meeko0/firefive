@@ -19,6 +19,9 @@ class Listing(db.Model):
     bedrooms = db.Column(db.Integer)
     amenities = db.Column(db.String(500), nullable=False, default="")
     photo_url = db.Column(db.String(500))
+    parking_cost = db.Column(db.Integer)
+    insurance_cost = db.Column(db.Integer)
+    average_utilities = db.Column(db.Integer)
 
     def to_dict(self):
         return {
@@ -39,4 +42,7 @@ class Listing(db.Model):
             "bedrooms": self.bedrooms,
             "amenities": [item for item in self.amenities.split(",") if item],
             "photoUrl": self.photo_url,
+            "parkingCost": self.parking_cost,
+            "insuranceCost": self.insurance_cost,
+            "averageUtilities": self.average_utilities,
         }

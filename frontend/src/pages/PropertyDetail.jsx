@@ -37,7 +37,7 @@ export default function PropertyDetail() {
       </section>
       <section className="property-info">
         <div><h2>About this property</h2><p>{listing.description}</p></div>
-        <aside><strong>{listing.bedrooms ? `${listing.bedrooms} bedroom${listing.bedrooms === 1 ? "" : "s"}` : "Bedrooms not listed"}</strong><span>Safety: {listing.averageSafetyRating || "Not rated"}</span><span>{listing.amenities.length ? listing.amenities.join(" · ") : "Amenities coming soon"}</span></aside>
+        <aside><strong>{listing.bedrooms ? `${listing.bedrooms} bedroom${listing.bedrooms === 1 ? "" : "s"}` : "Bedrooms not listed"}</strong><span>Safety: {listing.averageSafetyRating || "Not rated"}</span><span>{listing.amenities.length ? listing.amenities.join(" · ") : "Amenities coming soon"}</span><hr /><strong>Monthly housing estimates</strong><span>Average utilities: {listing.averageUtilities == null ? "Not provided" : `$${listing.averageUtilities}`}</span><span>Parking: {listing.parkingCost == null ? "Not provided" : `$${listing.parkingCost}`}</span><span>Renter&apos;s insurance: {listing.insuranceCost == null ? "Not provided" : `$${listing.insuranceCost}`}</span></aside>
       </section>
       <section className="property-reviews">
         <div className="property-reviews__head"><div><h2>Student reviews</h2><p>Approved experiences from the PantherDen community.</p></div><label>Sort<select value={sort} onChange={(e) => setSort(e.target.value)}><option value="relevant">Most relevant</option><option value="newest">Newest</option><option value="highest">Highest rated</option><option value="lowest">Lowest rated</option></select></label></div>

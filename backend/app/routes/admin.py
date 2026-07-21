@@ -11,6 +11,10 @@ from app.mail import send_email
 admin_bp = Blueprint("admin", __name__, url_prefix="/api/admin")
 
 
+def optional_number(value):
+    return None if value in (None, "") else value
+
+
 @admin_bp.route("/dashboard", methods=["GET"])
 @require_auth(staff=True)
 def dashboard():
@@ -62,6 +66,9 @@ def add_property():
         bedrooms=data.get("bedrooms"),
         amenities=",".join(data.get("amenities", [])),
         photo_url=str(data.get("photoUrl", "")) or "/property-placeholder.svg",
+        parking_cost=optional_number(data.get("parkingCost")),
+        insurance_cost=optional_number(data.get("insuranceCost")),
+        average_utilities=optional_number(data.get("averageUtilities")),
         rating=0,
         review_count=0,
     )
@@ -97,5 +104,8 @@ def update_property(listing_id):
     listing.distance_mi = data.get("distanceMi", listing.distance_mi) or None
     listing.amenities = ",".join(data.get("amenities", listing.to_dict()["amenities"]))
     listing.photo_url = str(data.get("photoUrl", listing.photo_url or "/property-placeholder.svg"))
+    listing.parking_cost = optional_number(data.get("parkingCost", listing.parking_cost))
+    listing.insurance_cost = optional_number(data.get("insuranceCost", listing.insurance_cost))
+    listing.average_utilities = optional_number(data.get("averageUtilities", listing.average_utilities))
     db.session.commit()
     return jsonify({"listing": listing.to_dict()})

@@ -1,0 +1,30 @@
+.budget-guidance {
+  padding: 15px;
+  border-radius: 9px;
+  color: var(--muted);
+  background: var(--bg);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.budget-guidance strong { color: var(--ink); }
+.budget-guidance p { margin: 7px 0 0; }
+.property-cost-details {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.property-cost-details span {
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: var(--muted);
+  background: var(--bg);
+  font-size: 10px;
+}
+.property-cost-details strong { color: var(--ink); }
+.cost-warning {
+  display: block;
+  margin-top: 8px;
+  color: var(--gsu-red);
+  font-size: 10px;
+}
