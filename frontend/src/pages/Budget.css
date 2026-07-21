@@ -1,0 +1,62 @@
+.budget { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+
+.budget__head { text-align: center; margin-bottom: 24px; }
+.budget__head h1 { margin: 0 0 8px; color: var(--gsu-blue); }
+.budget__head p { margin: 0; color: var(--muted); }
+
+.budget__form {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr auto;
+  gap: 16px;
+  align-items: end;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field__label { font-size: 13px; font-weight: 600; }
+
+.field select,
+.field__money {
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0 12px;
+  font-size: 14px;
+  background: #fff;
+}
+.field select { color: var(--ink); }
+.field__money { display: flex; align-items: center; gap: 6px; }
+.field__money input { border: none; outline: none; width: 100%; font-size: 14px; }
+.field__suffix { color: var(--muted); font-size: 13px; white-space: nowrap; }
+
+.budget__find {
+  height: 44px;
+  padding: 0 28px;
+  background: var(--gsu-blue);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  border-radius: 10px;
+}
+.budget__find:hover { background: var(--gsu-blue-dark); }
+
+.budget__results { margin-top: 28px; }
+.budget__count { font-weight: 600; margin-bottom: 16px; }
+.budget__empty {
+  text-align: center; color: var(--muted);
+  padding: 32px; background: var(--surface);
+  border: 1px dashed var(--line); border-radius: var(--radius);
+}
+.budget__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 720px) {
+  .budget__form { grid-template-columns: 1fr; }
+}
