@@ -19,7 +19,8 @@ export default function NavBar() {
       <NavLink to="/write-review" className="navbar__cta">+ Write a review</NavLink>
       {user ? (
         <div className="navbar__account">
-          <span>Hi, {user.name.split(" ")[0]}</span>
+          <NavLink to="/profile">Hi, {user.name.split(" ")[0]}</NavLink>
+          {user.isAdmin && <NavLink to="/admin">Admin</NavLink>}
           <button type="button" onClick={signOut}>Log out</button>
         </div>
       ) : (

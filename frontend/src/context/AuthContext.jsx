@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { AuthContext } from "./authContext";
 
 const STORAGE_KEY = "pantherden-session";
@@ -13,19 +13,21 @@ function loadSession() {
 
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(loadSession);
+  const signIn = useCallback((nextSession) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextSession));
+    setSession(nextSession);
+  }, []);
+  const signOut = useCallback(() => {
+    localStorage.removeItem(STORAGE_KEY);
+    setSession(null);
+  }, []);
 
   const value = useMemo(() => ({
     user: session?.user || null,
     token: session?.token || null,
-    signIn(nextSession) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(nextSession));
-      setSession(nextSession);
-    },
-    signOut() {
-      localStorage.removeItem(STORAGE_KEY);
-      setSession(null);
-    },
-  }), [session]);
+    signIn,
+    signOut,
+  }), [session, signIn, signOut]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

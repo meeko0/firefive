@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="title desc">
+  <title id="title">PantherDen property</title><desc id="desc">Stylized student apartment building</desc>
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e6ecf7"/><stop offset="1" stop-color="#fff"/></linearGradient></defs>
+  <rect width="800" height="500" fill="url(#sky)"/><circle cx="675" cy="95" r="48" fill="#c60c30" opacity=".14"/>
+  <path d="M130 410V185l270-115 270 115v225" fill="#0039a6" opacity=".94"/><path d="M230 410V225h340v185" fill="#fff"/>
+  <g fill="#e6ecf7"><rect x="270" y="260" width="70" height="60" rx="5"/><rect x="365" y="260" width="70" height="60" rx="5"/><rect x="460" y="260" width="70" height="60" rx="5"/></g>
+  <path d="M365 410v-62h70v62" fill="#c60c30"/><path d="M80 410h640" stroke="#002b7f" stroke-width="12" stroke-linecap="round"/>
+</svg>

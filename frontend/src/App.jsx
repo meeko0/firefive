@@ -7,6 +7,9 @@ import WriteReview from "./pages/WriteReview";
 import About from "./pages/About";
 import Budget from "./pages/Budget";
 import AuthPage from "./pages/AuthPage";
+import AccountAction from "./pages/AccountAction";
+import Profile from "./pages/Profile";
+import Admin from "./pages/Admin";
 
 export default function App() {
   return (
@@ -21,6 +24,11 @@ export default function App() {
         <Route path="/budget" element={<Budget />} />
         <Route path="/login" element={<AuthPage mode="login" />} />
         <Route path="/signup" element={<AuthPage mode="signup" />} />
+        <Route path="/verify" element={<AccountAction mode="verify" />} />
+        <Route path="/forgot-password" element={<AccountAction mode="forgot" />} />
+        <Route path="/reset-password" element={<AccountAction mode="reset" />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </>
   );

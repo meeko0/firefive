@@ -16,6 +16,9 @@ class Listing(db.Model):
     price_per_semester = db.Column(db.Integer)
     room_type = db.Column(db.String(50))
     meal_plan = db.Column(db.Boolean, nullable=False, default=False)
+    bedrooms = db.Column(db.Integer)
+    amenities = db.Column(db.String(500), nullable=False, default="")
+    photo_url = db.Column(db.String(500))
 
     def to_dict(self):
         return {
@@ -33,4 +36,7 @@ class Listing(db.Model):
             "pricePerSemester": self.price_per_semester,
             "roomType": self.room_type,
             "mealPlan": self.meal_plan,
+            "bedrooms": self.bedrooms,
+            "amenities": [item for item in self.amenities.split(",") if item],
+            "photoUrl": self.photo_url,
         }

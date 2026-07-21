@@ -25,7 +25,8 @@ export default function AuthPage({ mode }) {
       const action = isSignup ? signup : login;
       const session = await action(values);
       signIn(session);
-      navigate("/");
+      if (isSignup) navigate(session.verificationToken ? `/verify?token=${session.verificationToken}` : "/verify");
+      else navigate("/");
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -56,6 +57,7 @@ export default function AuthPage({ mode }) {
             Email address
             <input name="email" type="email" value={values.email} onChange={update} autoComplete="email" required />
           </label>
+          {!isSignup && <Link className="auth-form__forgot" to="/forgot-password">Forgot password?</Link>}
           <label>
             Password
             <input name="password" type="password" value={values.password} onChange={update} autoComplete={isSignup ? "new-password" : "current-password"} minLength={isSignup ? 8 : undefined} required />
