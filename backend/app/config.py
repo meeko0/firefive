@@ -8,6 +8,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv("SECRET_KEY", "pantherden-local-development-secret-change-me")
     ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@gsu.edu").lower()
+    MODERATOR_EMAIL = os.getenv("MODERATOR_EMAIL", "moderator@gsu.edu").lower()
     FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
     SMTP_HOST = os.getenv("SMTP_HOST")
     SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))

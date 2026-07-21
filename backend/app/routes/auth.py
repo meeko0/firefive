@@ -17,7 +17,7 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 
 def serialize_user(user):
-    return {"id": user.id, "name": user.name, "email": user.email, "isVerified": user.is_verified, "isAdmin": user.is_admin}
+    return {"id": user.id, "name": user.name, "email": user.email, "isVerified": user.is_verified, "isAdmin": user.is_admin, "isModerator": user.is_moderator}
 
 
 def create_token(user, purpose="session", lifetime=timedelta(days=7)):
@@ -47,7 +47,13 @@ def signup():
         return jsonify({"error": "Password must be at least 8 characters."}), 400
 
     password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-    user = User(name=name, email=email, password_hash=password_hash, is_admin=email == current_app.config["ADMIN_EMAIL"])
+    user = User(
+        name=name,
+        email=email,
+        password_hash=password_hash,
+        is_admin=email == current_app.config["ADMIN_EMAIL"],
+        is_moderator=email == current_app.config["MODERATOR_EMAIL"],
+    )
     db.session.add(user)
 
     try:
@@ -76,6 +82,13 @@ def login():
 
     if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password_hash.encode("utf-8")):
         return jsonify({"error": "Incorrect email or password."}), 401
+
+    # Allow an existing account to receive its configured staff role on next login.
+    if user.email == current_app.config["ADMIN_EMAIL"] and not user.is_admin:
+        user.is_admin = True
+    if user.email == current_app.config["MODERATOR_EMAIL"] and not user.is_moderator:
+        user.is_moderator = True
+    db.session.commit()
 
     return jsonify({"token": create_token(user), "user": serialize_user(user)})
 

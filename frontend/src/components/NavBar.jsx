@@ -20,7 +20,7 @@ export default function NavBar() {
       {user ? (
         <div className="navbar__account">
           <NavLink to="/profile">Hi, {user.name.split(" ")[0]}</NavLink>
-          {user.isAdmin && <NavLink to="/admin">Admin</NavLink>}
+          {(user.isModerator || user.isAdmin) && <NavLink to="/admin">{user.isAdmin ? "Admin" : "Moderator"}</NavLink>}
           <button type="button" onClick={signOut}>Log out</button>
         </div>
       ) : (

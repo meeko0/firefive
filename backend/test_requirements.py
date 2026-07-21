@@ -42,14 +42,18 @@ class RequirementsLifecycleTest(unittest.TestCase):
         from app.routes.auth import create_token
         with self.app.app_context():
             student = User.query.filter_by(email="student@gsu.edu").first()
-            admin = User(name="Admin", email="admin@gsu.edu", password_hash=student.password_hash, is_verified=True, is_admin=True)
-            db.session.add(admin)
+            moderator = User(name="Moderator", email="moderator@gsu.edu", password_hash=student.password_hash, is_verified=True, is_moderator=True)
+            db.session.add(moderator)
             db.session.commit()
-            admin_token = create_token(admin)
-        admin_headers = {"Authorization": f"Bearer {admin_token}"}
-        dashboard = self.client.get("/api/admin/dashboard", headers=admin_headers)
+            moderator_token = create_token(moderator)
+        moderator_headers = {"Authorization": f"Bearer {moderator_token}"}
+        dashboard = self.client.get("/api/admin/dashboard", headers=moderator_headers)
+        self.assertEqual(dashboard.status_code, 200)
+        self.assertTrue(any(user["role"] == "moderator" for user in dashboard.get_json()["users"]))
         review_id = dashboard.get_json()["pendingReviews"][0]["id"]
-        self.assertEqual(self.client.patch(f"/api/admin/reviews/{review_id}", headers=admin_headers, json={"status": "approved"}).status_code, 200)
+        self.assertEqual(self.client.patch(f"/api/admin/reviews/{review_id}", headers=moderator_headers, json={"status": "approved"}).status_code, 200)
+        property_response = self.client.post("/api/admin/properties", headers=moderator_headers, json={"name": "Moderator Added Housing", "address": "1 GSU Plaza", "type": "apartment", "bedrooms": 2, "amenities": ["Parking"]})
+        self.assertEqual(property_response.status_code, 201)
         detail = self.client.get("/api/listings/1?sort=highest").get_json()
         self.assertEqual(len(detail["reviews"]), 1)
         self.assertEqual(detail["averageSafetyRating"], 4.0)

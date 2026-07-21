@@ -13,6 +13,7 @@ def update_sqlite_schema():
         "users": {
             "is_verified": "BOOLEAN NOT NULL DEFAULT 0",
             "is_admin": "BOOLEAN NOT NULL DEFAULT 0",
+            "is_moderator": "BOOLEAN NOT NULL DEFAULT 0",
         },
         "listings": {
             "housing_type": "VARCHAR(20) NOT NULL DEFAULT 'apartment'", "rating": "FLOAT NOT NULL DEFAULT 0",

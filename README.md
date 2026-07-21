@@ -34,6 +34,7 @@ testable without an email provider.
 
 ```bash
 ADMIN_EMAIL=admin@gsu.edu
+MODERATOR_EMAIL=moderator@gsu.edu
 FRONTEND_URL=http://localhost:5173
 SMTP_HOST=smtp.example.com
 SMTP_PORT=587
@@ -43,5 +44,7 @@ SMTP_FROM="PantherDen <no-reply@example.com>"
 SECRET_KEY=replace-with-a-long-random-production-secret
 ```
 
-The account matching `ADMIN_EMAIL` receives access to the moderation dashboard after
-signing up. Reviews remain pending until an administrator approves them.
+The accounts matching `ADMIN_EMAIL` and `MODERATOR_EMAIL` receive access to the staff
+dashboard after signing up. Moderators can manage the review queue, send rejection
+reasons, add properties, inspect platform totals, and view the user directory. Reviews
+remain pending until a moderator or administrator approves them.

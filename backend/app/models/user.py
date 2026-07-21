@@ -8,4 +8,5 @@ class User(db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     is_verified = db.Column(db.Boolean, nullable=False, default=False)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
+    is_moderator = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())

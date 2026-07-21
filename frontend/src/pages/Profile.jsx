@@ -12,7 +12,7 @@ export default function Profile() {
   useEffect(() => { if (token) { fetchProfile(token).then(setProfile); fetchFavorites().then(setFavorites); } }, [token]);
   if (!user) return <main className="profile-page"><h1>Log in to view your profile</h1></main>;
   async function remove() { if (!window.confirm("Delete your account and all of your reviews? This cannot be undone.")) return; await deleteAccount(token); signOut(); navigate("/"); }
-  return <main className="profile-page"><header><div><p>Student profile</p><h1>{user.name}</h1><span>{user.email} · {user.isVerified ? "Verified" : "Verification pending"}</span></div><button onClick={remove}>Delete account</button></header>
+  return <main className="profile-page"><header><div><p>{user.isAdmin ? "Administrator" : user.isModerator ? "Moderator" : "Student"} profile</p><h1>{user.name}</h1><span>{user.email} · {user.isVerified ? "Verified" : "Verification pending"}</span></div><button onClick={remove}>Delete account</button></header>
     <section><h2>Saved housing</h2><div className="profile-grid">{favorites.map((item) => <ListingCard key={item.id} listing={item} canFavorite={false} />)}{favorites.length === 0 && <p>No favorites saved yet.</p>}</div></section>
     <section><h2>My reviews</h2>{profile?.reviews?.map((review) => <article className="profile-review" key={review.id}><strong>{review.title}</strong><span>{review.listingName} · {review.status}</span>{review.rejectionReason && <p>Moderator note: {review.rejectionReason}</p>}</article>)}{profile?.reviews?.length === 0 && <p>No reviews submitted yet.</p>}</section>
   </main>;
