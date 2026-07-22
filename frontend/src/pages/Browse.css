@@ -1,6 +1,21 @@
 .browse { max-width: 1100px; margin: 0 auto; padding: 24px; }
 .browse__bar { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
 .browse__count { color: var(--muted); font-size: 13px; }
+.browse__filters { display: grid; grid-template-columns: 2fr repeat(4, 1fr) auto; gap: 10px; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.browse__filters label { display: grid; gap: 5px; color: var(--muted); font-size: 11px; font-weight: 700; }
+.browse__filters input, .browse__filters select { min-width: 0; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font: inherit; }
+.browse__filters button { align-self: end; padding: 10px 16px; border: 0; border-radius: 8px; color: #fff; background: var(--gsu-blue); font-weight: 700; }
+@media (max-width: 850px) { .browse__filters { grid-template-columns: repeat(2, 1fr); } .browse__search { grid-column: 1 / -1; } }
+@media (max-width: 500px) { .browse__filters { grid-template-columns: 1fr; } .browse__search { grid-column: auto; } }
+.browse__message {
+  margin-top: 24px;
+  padding: 18px;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.browse__message--error { color: var(--gsu-red); }
 .browse__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

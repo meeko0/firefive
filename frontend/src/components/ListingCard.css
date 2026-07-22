@@ -10,8 +10,10 @@
   position: absolute; top: 8px; right: 12px;
   width: 26px; height: 26px; display: flex;
   align-items: center; justify-content: center;
-  background: #fff; border-radius: 50%; color: var(--gsu-red); font-size: 15px;
+  background: #fff; border: 0; border-radius: 50%; color: var(--gsu-red); font-size: 15px;
 }
+.listing-card__heart:disabled { color: var(--muted); cursor: not-allowed; }
+.listing-card__heart.is-favorite { background: var(--gsu-red-soft); }
 .listing-card__body { padding: 14px 16px 16px; }
 .listing-card__name { margin: 0; font-size: 16px; font-weight: 700; }
 .listing-card__address { margin: 4px 0 0; font-size: 12px; color: var(--muted); }
