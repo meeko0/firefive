@@ -15,6 +15,9 @@ from app.mail import send_email
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
+failed_login_attempts = {}
+MAX_ATTEMPTS = 5
+LOCKOUT_MINUTES = 15
 
 def serialize_user(user):
     return {"id": user.id, "name": user.name, "email": user.email, "isVerified": user.is_verified, "isAdmin": user.is_admin, "isModerator": user.is_moderator}
@@ -31,6 +34,40 @@ def create_token(user, purpose="session", lifetime=timedelta(days=7)):
     }
     return jwt.encode(payload, current_app.config["SECRET_KEY"], algorithm="HS256")
 
+def is_gsu_email(email):
+    if "@" not in email:
+        return False
+    domain = email.rsplit("@", 1)[1]
+    return domain == "gsu.edu" or domain.endswith(".gsu.edu")
+
+def is_strong_password(password):
+    if len(password) < 8:
+        return False
+    has_upper = any(c.isupper() for c in password)
+    has_lower = any(c.islower() for c in password)
+    has_digit = any(c.isdigit() for c in password)
+    has_special = any(not c.isalnum() for c in password)
+    return has_upper and has_lower and has_digit and has_special
+
+def is_locked_out(email):
+    record = failed_login_attempts.get(email)
+    if not record:
+        return False
+    count, last_attempt = record
+    if count < MAX_ATTEMPTS:
+        return False
+    if datetime.now(timezone.utc) - last_attempt > timedelta(minutes=LOCKOUT_MINUTES):
+        failed_login_attempts.pop(email, None)
+        return False
+    return True
+
+def record_failed_login(email):
+    count, _ = failed_login_attempts.get(email, (0, None))
+    failed_login_attempts[email] = (count + 1, datetime.now(timezone.utc))
+
+
+def clear_failed_logins(email):
+    failed_login_attempts.pop(email, None)
 
 @auth_bp.route("/signup", methods=["POST"])
 def signup():
@@ -41,11 +78,10 @@ def signup():
 
     if len(name) < 2:
         return jsonify({"error": "Name must be at least 2 characters."}), 400
-    if not email.endswith(".edu"):
-        return jsonify({"error": "Use your university .edu email address."}), 400
-    if len(password) < 8:
-        return jsonify({"error": "Password must be at least 8 characters."}), 400
-
+    if not is_gsu_email(email):
+        return jsonify({"error": "Must use GSU email - (@gsu.edu or @student.gsu.edu)."}), 400
+    if not is_strong_password(password):
+        return jsonify({"error": "Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a special character."}), 400
     password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
     user = User(
         name=name,
@@ -80,7 +116,11 @@ def login():
     password = str(data.get("password", ""))
     user = User.query.filter_by(email=email).first()
 
+    if is_locked_out(email):
+        return jsonify({"error": "Too many failed login attempts. Please try again in 15 minutes."}), 429
+
     if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password_hash.encode("utf-8")):
+        record_failed_login(email)
         return jsonify({"error": "Incorrect email or password."}), 401
 
     # Allow an existing account to receive its configured staff role on next login.
@@ -90,6 +130,7 @@ def login():
         user.is_moderator = True
     db.session.commit()
 
+    clear_failed_logins(email)
     return jsonify({"token": create_token(user), "user": serialize_user(user)})
 
 
@@ -134,8 +175,8 @@ def forgot_password():
 def reset_password():
     data = request.get_json(silent=True) or {}
     password = str(data.get("password", ""))
-    if len(password) < 8:
-        return jsonify({"error": "Password must be at least 8 characters."}), 400
+    if not is_strong_password(password):
+        return jsonify({"error": "Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a special character."}), 400
     try:
         user = decode_purpose_token(str(data.get("token", "")), "reset")
     except (jwt.InvalidTokenError, KeyError, TypeError, ValueError):

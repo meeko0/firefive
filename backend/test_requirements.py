@@ -19,7 +19,7 @@ class RequirementsLifecycleTest(unittest.TestCase):
             os.remove(cls.database_path)
 
     def test_complete_student_and_admin_lifecycle(self):
-        signup = self.client.post("/api/auth/signup", json={"name": "Student User", "email": "student@gsu.edu", "password": "testing123"})
+        signup = self.client.post("/api/auth/signup", json={"name": "Student User", "email": "student@gsu.edu", "password": "Testing123!"})
         self.assertEqual(signup.status_code, 201)
         verify = self.client.post("/api/auth/verify", json={"token": signup.get_json()["verificationToken"]})
         self.assertEqual(verify.status_code, 200)
